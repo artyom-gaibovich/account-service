@@ -16,16 +16,6 @@ func GetString(name, defaultValue string) string {
 	return defaultValue
 }
 
-func GetString(name, defaultValue string) string {
-	value := os.Getenv(name)
-
-	if value != "" {
-		return value
-	}
-
-	return defaultValue
-}
-
 func GetInt(name string, defaultValue int) int {
 	value := os.Getenv(name)
 
