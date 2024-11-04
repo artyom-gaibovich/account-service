@@ -10,7 +10,7 @@ FROM alpine:3
 
 WORKDIR /app
 
-COPY --from=builder /app/account-service .
+COPY --from=builder /app/account_service .
 
 EXPOSE 3000
 
