@@ -30,7 +30,7 @@ type Context struct {
 func NewContext() *Context {
 	return &Context{
 		Port:        env.GetInt("PORT", 3000),
-		PostgresURL: env.GetString("POSTGRES_URL", "postgres://admin:root@localhost:5432/account-service?sslmode=disable"),
+		PostgresURL: env.GetString("POSTGRES_URL", "postgres://admin:root@localhost:5432/account_v1?sslmode=disable"),
 	}
 }
 
