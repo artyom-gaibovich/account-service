@@ -18,15 +18,12 @@ func NewUserManager(db *sql.DB) *UserManager {
 
 func (r *UserManager) Create(ctx context.Context, user auth.User) error {
 	err := r.Insert(ctx, "auth_users", map[string]interface{}{
-		"id":               user.ID,
-		"name":             user.Name,
-		"email":            user.Email,
-		"provider_user_id": user.ProviderUserID,
+		"id":    user.ID,
+		"name":  user.Name,
+		"email": user.Email,
 	})
-
 	if err != nil {
 		return fmt.Errorf("error on CreateUser: %w", err)
 	}
-
 	return nil
 }
