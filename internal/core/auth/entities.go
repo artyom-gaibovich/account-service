@@ -11,10 +11,9 @@ type ProviderUser struct {
 }
 
 type User struct {
-	ID             string
-	ProviderUserID string
-	Email          string
-	Name           string
+	ID    string
+	Email string
+	Name  string
 }
 
 var ErrInvalidState = errors.New("invalid state error")

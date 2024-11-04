@@ -3,13 +3,20 @@ package handlers
 import (
 	"account-service/internal/ui/account-service/ports"
 	"encoding/json"
-	"fmt"
+	"github.com/go-chi/render"
+	"github.com/go-playground/validator/v10"
 	"net/http"
 )
 
 type ConfirmAuthHandler struct {
 	usecase ports.ConfirmAuthUseCase
 	baseURL string
+}
+
+type Response struct {
+	Status  string `json:"status"` // Error, ok
+	Error   string `json:"error,omitempty"`
+	Message string `json:"message,omitempty"`
 }
 
 func NewConfirmAuthHandler(usecase ports.ConfirmAuthUseCase, baseURL string) *ConfirmAuthHandler {
@@ -20,23 +27,26 @@ func NewConfirmAuthHandler(usecase ports.ConfirmAuthUseCase, baseURL string) *Co
 }
 
 func (h *ConfirmAuthHandler) ServeHTTP(w http.ResponseWriter, r *http.Request) {
-	switch r.Method {
-	case "GET":
-		fmt.Print("Это у нас GET запрос !!!")
-	case "POST":
-		decoder := json.NewDecoder(r.Body)
-		var requestBody struct {
-			Username   string `json:"username"`
-			Id         int    `json:"id"`
-			TelegramId int    `json:"telegram_id"`
-		}
-		err := decoder.Decode(&requestBody)
-		if err != nil {
-			http.Error(w, "Invalid request body", http.StatusBadRequest)
-			return
-		}
-		fmt.Printf("POST request: state=%s, code=%s\n", requestBody.Id, requestBody.Username, requestBody.TelegramId)
+	var request ConfirmAuthRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
 	}
-	w.WriteHeader(http.StatusNotFound)
+	validate := validator.New()
+	err = validate.Struct(request)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+	err = h.usecase.Execute()
+
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+	}
+
+	render.JSON(w, r, Response{
+		Message: "OK",
+	})
 
 }

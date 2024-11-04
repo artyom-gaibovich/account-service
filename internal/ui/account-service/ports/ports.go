@@ -1,7 +1,5 @@
 package ports
 
-import "context"
-
 type UseCases struct {
 	CreateUser  CreateUserUseCase
 	DeleteUser  DeleteUserUseCase
@@ -22,5 +20,5 @@ type FindUserUseCase interface {
 }
 
 type ConfirmAuthUseCase interface {
-	Execute(ctx context.Context, state, code string) error
+	Execute() error
 }
